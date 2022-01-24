@@ -183,6 +183,8 @@ function submitForm(e) {
     } 
 
     if (validateForm()) return
+    if (validateEmail()) return
+    if (detectWord()) return
 
     const body = addRequestBody()
     fetch("http://localhost:3000/api/products/order", {
@@ -211,6 +213,35 @@ function validateForm() {
         return false
  })
 }
+
+function validateEmail() {
+    const email = document.querySelector("#email").value
+    const regex = /^[A-Za-z0-9+_.-]+@(.+)$/
+    if (regex.test(email) === false) {
+        alert("Please enter valid email")
+        return true
+    }
+    return false
+}
+
+function detectWord() {
+    const form = document.querySelector(".cart__order__form").value
+    const regex = /\d/g;
+    if (regex.test(firstName.value) === true) {
+        alert("Please enter a valid first name")
+        return true
+    }
+    if (regex.test(lastName.value) === true) {
+        alert("Please enter a valid last name")
+        return true
+    }
+    if (regex.test(city.value) === true) {
+        alert("Please enter valid city")
+        return true
+    }
+    return false
+}
+
 function addRequestBody() {
     const form = document.querySelector(".cart__order__form")
     const firstName = form.elements.firstName.value

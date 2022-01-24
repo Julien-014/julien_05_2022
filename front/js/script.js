@@ -4,7 +4,7 @@ fetch("http://localhost:3000/api/products")
 
 function productsData(product) {
 
-       
+       /* revoir la boucle */
     for (let i = 0; i < product.length; i++) {
               
         const { _id, imageUrl, altTxt, name, description } = product[i]
