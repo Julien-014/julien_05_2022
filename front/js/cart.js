@@ -1,6 +1,9 @@
 const cart = []
 
 
+/*test*/
+
+
 retrieveItems()
 cart.forEach((item) => displayItem(item))
 
