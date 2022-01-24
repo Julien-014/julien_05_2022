@@ -17,3 +17,5 @@ function removeEverything() {
     const cache = window.localStorage
     cache.clear()
 }
+
+/* test */
