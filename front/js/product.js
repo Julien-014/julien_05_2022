@@ -2,9 +2,10 @@ const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
 if (id != null) {
-    let productPrice = 0
+    let priceProduct = 0
     let imgUrl, altText, itemName
 }
+
 
 fetch(`http://localhost:3000/api/products/${id}`)
     .then(response => response.json())
@@ -18,7 +19,7 @@ function takeData(sofa) {
     const imageUrl = sofa.imageUrl
     const name = sofa.name
     const price = sofa.price
-    productPrice = price
+    priceProduct = price
     imgUrl = imageUrl
     altText = altTxt
     itemName = name
@@ -70,18 +71,31 @@ const button = document.querySelector("#addToCart")
 if (button != null) {
     button.addEventListener("click", (e) => {
         const color = document.querySelector("#colors").value
+        if (color === "" ) {
+            alert ("Please select a color");
+            return;
+        }
         const quantity = document.querySelector("#quantity").value
+        if (quantity == 0 ) {
+            alert ("Please select at least 1 item");
+            return;
+        }
+        if (quantity > 100 ) {
+            alert ("You cannot select more than 100 items");
+            return;
+        }
         saveCart(color, quantity)
     })
 }
 
-function saveCart(color, quantity) {
+
+async function saveCart(color, quantity) {
     const key = `${id}-${color}`
     const data = {
         id: id,
         color: color,
         quantity: Number(quantity),
-        price: productPrice,
+        price : priceProduct,
         imageUrl: imgUrl,
         altTxt: altText,
         name: itemName
@@ -89,4 +103,7 @@ function saveCart(color, quantity) {
     localStorage.setItem(key, JSON.stringify(data))
 }
 
-
+/*
+const price = document.getElementById("price")
+const priceProduct = await (fetch(`http://localhost:300/api/products/${id}`)).json().price
+*/

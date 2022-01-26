@@ -1,9 +1,5 @@
 const cart = []
 
-
-/*test*/
-
-
 retrieveItems()
 cart.forEach((item) => displayItem(item))
 
@@ -19,6 +15,7 @@ function retrieveItems() {
     }
 
 }
+
 
 function displayItem(item) {
     const article = addArticle(item)
@@ -188,6 +185,7 @@ function submitForm(e) {
     if (validateForm()) return
     if (validateEmail()) return
     if (detectWord()) return
+    if (validateAddress()) return
 
     const body = addRequestBody()
     fetch("http://localhost:3000/api/products/order", {
@@ -217,11 +215,21 @@ function validateForm() {
  })
 }
 
+function validateAddress() {
+    const address = document.querySelector("#address").value
+    const regex = /^(\d+) ?([A-Za-z](?= ))? (.*?) ([^ ]+?) ?((?<= )APT)? ?((?<= )\d*)?$/
+    if (regex.test(address) === false) {
+        alert ("Please enter a valid address")
+        return true
+    }
+    return false
+}
+
 function validateEmail() {
     const email = document.querySelector("#email").value
     const regex = /^[A-Za-z0-9+_.-]+@(.+)$/
     if (regex.test(email) === false) {
-        alert("Please enter valid email")
+        alert("Please enter a valid email")
         return true
     }
     return false
