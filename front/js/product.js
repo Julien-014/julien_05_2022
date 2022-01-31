@@ -1,16 +1,24 @@
+//Rechercher une valeur dans un querystring
+//Renvoie la 1ère valeur associée au paramètre de recherche
+//Puis récuperer l'id du produit
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
+//Pour que ces items soient accessibles et que leurs portée ne soit pas limitée
 if (id != null) {
     let priceProduct = 0
     let imgUrl, altText, itemName
 }
 
-
+//Récuperer les id des produits grâce a l'API Fetch et les passer à la fonction takeData
 fetch(`http://localhost:3000/api/products/${id}`)
     .then(response => response.json())
     .then(res => takeData(res))
 
+//Récupérer les données obtenue par l'API 
+//Les associer aux éléments donnés
+//On ajoute les fonctions ayant besoin des données pour se remplir
+//Ces fonctions vont récupérer les données dont elles ont besoin
 function takeData(sofa) {
 
     const altTxt = sofa.altTxt
@@ -31,6 +39,10 @@ function takeData(sofa) {
 
 }
 
+//Créer une image, ajouter sa source et son altxt grâce aux données récupérer
+//Cela s'ajoute dans le HTML
+//récupérer la classe item_img
+//Puis placer l'img dans cette classe
 function addImage(imageUrl, altTxt) {
     const image = document.createElement("img")
     image.src = imageUrl
@@ -39,22 +51,32 @@ function addImage(imageUrl, altTxt) {
     if (parent != null) parent.appendChild(image)
 }
 
+//Ajouter un objet nom qui sera le nom du produit
+//Cela s'ajoute dans le HTML
 function addTitle(name) {
     const h1 = document.querySelector("#title")
     if (h1 != null) h1.textContent = name
 }
 
-
+//Créer un objet prix
+//Cela s'ajoute dans le HTML
 function addPrice(price) {
     const span = document.querySelector("#price")
     if (span != null) span.textContent = price
 }
 
+//Créer un objet description
+//Cela s'ajoute dans le HTML
 function addDescription(description) {
     const p = document.querySelector("#description")
     if (p != null) p.textContent = description
 }
 
+//Créer plus d'ub objet option value pour les choix de couleurs
+//Les données des couleurs des produits sont prises grâce a la fonction takeData
+//Ajouter le choix des couleurs aux produits
+//Il y aura plusieurs choix de couleurs
+//Cela s'ajoute dans le HTML
 function addColors(colors) {
     const select = document.querySelector("#colors")
     if (select != null) {
@@ -67,21 +89,26 @@ function addColors(colors) {
     }
 }
 
+//Cela va vérifier que les options ont été remplis avant d'ajouter au panier
+//Il faut sélectionner une couleur avant de pouvoir ajouter un produit au panier
+//Il faut sélectionner au moins 1 en quantité avant de pouvoir ajouter un produit au panier
+//On ne peut pas ajouter plus de 100 quantités avant de pouvoir ajouter au panier
+//Si les critères sont remplis le produit voulu peut s'ajouter au panier
 const button = document.querySelector("#addToCart")
 if (button != null) {
     button.addEventListener("click", (e) => {
         const color = document.querySelector("#colors").value
-        if (color === "" ) {
-            alert ("Please select a color");
+        if (color === "") {
+            alert("Please select a color");
             return;
         }
         const quantity = document.querySelector("#quantity").value
-        if (quantity == 0 ) {
-            alert ("Please select at least 1 item");
+        if (quantity == 0) {
+            alert("Please select at least 1 item");
             return;
         }
-        if (quantity > 100 ) {
-            alert ("You cannot select more than 100 items");
+        if (quantity > 100) {
+            alert("You cannot select more than 100 items");
             return;
         }
         saveCart(color, quantity)
@@ -89,13 +116,17 @@ if (button != null) {
 }
 
 
-async function saveCart(color, quantity) {
+
+//Fonction qui va sauvegarder le produit et les options sélectionnés
+//Cela va sotcker les données dans le LocalStorage
+//Et ajouter cela au panier qui reçevra les données du localstorage
+function saveCart(color, quantity) {
     const key = `${id}-${color}`
     const data = {
         id: id,
         color: color,
         quantity: Number(quantity),
-        price : priceProduct,
+        price: priceProduct,
         imageUrl: imgUrl,
         altTxt: altText,
         name: itemName
