@@ -27,7 +27,6 @@ function takeData(sofa) {
     const imageUrl = sofa.imageUrl
     const name = sofa.name
     const price = sofa.price
-    priceProduct = price
     imgUrl = imageUrl
     altText = altTxt
     itemName = name
@@ -126,7 +125,6 @@ function saveCart(color, quantity) {
         id: id,
         color: color,
         quantity: Number(quantity),
-        price: priceProduct,
         imageUrl: imgUrl,
         altTxt: altText,
         name: itemName
@@ -134,7 +132,4 @@ function saveCart(color, quantity) {
     localStorage.setItem(key, JSON.stringify(data))
 }
 
-/*
-const price = document.getElementById("price")
-const priceProduct = await (fetch(`http://localhost:300/api/products/${id}`)).json().price
-*/
+

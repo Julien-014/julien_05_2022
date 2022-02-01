@@ -1,8 +1,10 @@
 // liste totale des objets dans un id
 const cart = []
 
-retrieveItems()
-cart.forEach((item) => displayItem(item))
+retrieveItems().then(() => {
+    cart.forEach((item) => displayItem(item))
+})
+
 
 //En appuyant sur le bouton "commander" la commande
 const orderButton = document.querySelector("#order")
@@ -13,11 +15,12 @@ orderButton.addEventListener("click", (e) => submitForm(e))
 //On récupère l'item du localStorage
 //On le transforme en objet 
 //dès qu'on a un objet on le pousse dans la bonne case
-function retrieveItems() {
-    const numberOfItems = localStorage.length 
+async function retrieveItems() {
+    const numberOfItems = localStorage.length
     for (let i = 0; i < numberOfItems; i++) {
         const item = localStorage.getItem(localStorage.key(i))
         const itemObject = JSON.parse(item)
+        itemObject.price = await getPriceByProduct(itemObject)
         cart.push(itemObject)
     }
 
@@ -45,17 +48,26 @@ function displayTotalQuantity() {
     totalQuantity.textContent = total
 }
 
+//Récupérer le prix des produits grâce à l'API
+async function getPriceByProduct(itemObject) {
+    const response = await fetch(`http://localhost:3000/api/products/${itemObject.id}`)
+    const responseJson = await response.json()
+    return responseJson.price
+}
+
 //Fonction qui va calculer et afficher le prix total des objets dans le panier
 //La fonction va multiplier le nombre d'article avec leur prix de base
 //Le prix va se mettre à jour automatiquement qu'on ajoute ou supprime des items
-function displayTotalPrice() {
+
+
+async function displayTotalPrice() {
     let total = 0
-    const totalPrice = document.querySelector("#totalPrice")
-    cart.forEach((item) => {
-        const totalUnitPrice = item.price * item.quantity
-        total += totalUnitPrice
-    })
-    totalPrice.textContent = total
+    const totalPrice = document.querySelector("#totalPrice")   
+    cart.forEach(async (item) => {
+        const totalUnitPrice = await getPriceByProduct(item) * item.quantity
+             total += totalUnitPrice;
+            })
+            totalPrice.textContent = total 
 }
 
 //Créer la div "cart__item__content"
@@ -127,11 +139,11 @@ function addDeleteToSettings(settings, item) {
 function deleteItem(item) {
     const itemToDelete = cart.findIndex(
         (product) => product.id === item.id && product.color === item.color)
-        cart.splice(itemToDelete, 1)
-        displayTotalPrice()
-        displayTotalQuantity()
-        deleteDataFromCache(item)
-        deleteArticleFromPage(item)
+    cart.splice(itemToDelete, 1)
+    displayTotalPrice()
+    displayTotalQuantity()
+    deleteDataFromCache(item)
+    deleteArticleFromPage(item)
 }
 
 //Cela va supprimer l'article qui a le bon id d'item et de color de l'article qu'on veut supprimer
@@ -179,8 +191,8 @@ function updateTotal(id, newValue, item) {
 
 //Supprimer l'ancienne valeur du cache
 function deleteDataFromCache(item) {
-  const key = `${item.id}-${item.color}`
-  localStorage.removeItem(key)  
+    const key = `${item.id}-${item.color}`
+    localStorage.removeItem(key)
 }
 
 //Ajouter la nouvelle valeur dans le cache
@@ -226,11 +238,11 @@ function addImageAndDiv(item) {
 //En postant les données complètes on va arriver sur la page de confirmation 
 //Si les différents champs du form sont invalides la commande ne s'enregistre pas
 function submitForm(e) {
-    e.preventDefault() 
-    if (cart.length === 0) { 
+    e.preventDefault()
+    if (cart.length === 0) {
         alert("Please select items")
-    return 
-    } 
+        return
+    }
 
     if (validateForm()) return
     if (validateEmail()) return
@@ -239,18 +251,18 @@ function submitForm(e) {
 
     const body = addRequestBody()
     fetch("http://localhost:3000/api/products/order", {
-        method : "POST",
-        body : JSON.stringify(body),
-        headers : {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
             "Content-Type": "application/json"
         }
     })
-    .then((res) => res.json())
-    .then((data) => {
-        const orderId = data.orderId
-        window.location.href = "/front/html/confirmation.html" + "?orderId=" + orderId
-    })
-    .catch((err) => console.log(err))
+        .then((res) => res.json())
+        .then((data) => {
+            const orderId = data.orderId
+            window.location.href = "/front/html/confirmation.html" + "?orderId=" + orderId
+        })
+        .catch((err) => console.log(err))
 }
 
 //La commande est accepté que si tout les champs de formulaire sont tous remplis
@@ -263,7 +275,7 @@ function validateForm() {
             return true
         }
         return false
- })
+    })
 }
 
 //L'adresse est validé que si elle remplit les normes imposé par la regex
@@ -271,7 +283,7 @@ function validateAddress() {
     const address = document.querySelector("#address").value
     const regex = /^(?:[0-8]\d|9[0-8])\d{3}$/
     if (regex.test(address) === true) {
-        alert ("Please enter a valid address")
+        alert("Please enter a valid address")
         return true
     }
     return false
@@ -317,15 +329,15 @@ function addRequestBody() {
     const address = form.elements.address.value
     const city = form.elements.city.value
     const email = form.elements.email.value
-    const body = { 
-        contact : {
-            firstName : firstName,
+    const body = {
+        contact: {
+            firstName: firstName,
             lastName: lastName,
             address: address,
             city: city,
             email: email
         },
-        products : getIdsFromStorage()
+        products: getIdsFromStorage()
     }
 
     return body
@@ -337,7 +349,7 @@ function getIdsFromStorage() {
     const numberOfProducts = localStorage.length
     const ids = []
     for (let i = 0; i < numberOfProducts; i++) {
-        const key =localStorage.key(i)
+        const key = localStorage.key(i)
         const id = key.split("-")[0]
         ids.push(id)
     }
