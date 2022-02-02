@@ -1,6 +1,7 @@
 // liste totale des objets dans un id
 const cart = []
 
+
 retrieveItems().then(() => {
     cart.forEach((item) => displayItem(item))
 })
@@ -23,7 +24,7 @@ async function retrieveItems() {
         itemObject.price = await getPriceByProduct(itemObject)
         cart.push(itemObject)
     }
-
+    
 }
 
 // Fonction qui permet de créer chaque élément qui va etre dans l'item
@@ -31,11 +32,11 @@ function displayItem(item) {
     const article = addArticle(item)
     const imgDiv = addImageAndDiv(item)
     article.appendChild(imgDiv)
-
+    
     const cartItemContent = addCartContent(item)
     article.appendChild(cartItemContent)
     displayArticle(article)
-
+    
     displayTotalQuantity()
     displayTotalPrice()
 }
@@ -43,8 +44,12 @@ function displayItem(item) {
 //Fonction qui va calculer et afficher la quantité total d'objet dans le panier
 //La quantité va se mettre à jour automatiquement qu'on ajoute ou supprime des items
 function displayTotalQuantity() {
+    let total = 0;
     const totalQuantity = document.querySelector("#totalQuantity")
-    const total = cart.reduce((total, item) => total + item.quantity, 0)
+    cart.forEach((item) => {
+        const totalUnitQuantity = total + item.quantity
+        total += totalUnitQuantity
+    })
     totalQuantity.textContent = total
 }
 
@@ -61,14 +66,16 @@ async function getPriceByProduct(itemObject) {
 
 
 async function displayTotalPrice() {
-    let total = 0
-    const totalPrice = document.querySelector("#totalPrice")   
+    var total = 0;
+    const totalPrice = document.querySelector("#totalPrice")
     cart.forEach(async (item) => {
         const totalUnitPrice = await getPriceByProduct(item) * item.quantity
-             total += totalUnitPrice;
-            })
-            totalPrice.textContent = total 
+        total += totalUnitPrice
+    })
+    totalPrice.textContent = total
+    console.log(total)
 }
+
 
 //Créer la div "cart__item__content"
 //Y ajouter la div Description et la Settings
