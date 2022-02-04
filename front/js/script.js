@@ -10,7 +10,7 @@ fetch("http://localhost:3000/api/products")
 function productsData(product) {
 
     //Boucle permettant de répéter les actions effectués à tout les produits présent dans les données
-    product.forEach((kanap) => {
+    for (const kanap of product) {
               
         const { _id, imageUrl, altTxt, name, description } = kanap
 
@@ -26,7 +26,7 @@ function productsData(product) {
         article.appendChild(p)
         
         appendChildren(anchor, article)
-    })
+    }
     
  
 }
