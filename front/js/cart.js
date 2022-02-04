@@ -15,7 +15,7 @@ orderButton.addEventListener("click", (e) => submitForm(e))
 //On retourne le nombre d'item stocké dans le localStorage
 //On récupère l'item du localStorage
 //On le transforme en objet 
-//dès qu'on a un objet on le pousse dans la bonne case
+//dès qu'on a l'objet on le pousse
 async function retrieveItems() {
     const numberOfItems = localStorage.length
     for (let i = 0; i < numberOfItems; i++) {
@@ -24,10 +24,10 @@ async function retrieveItems() {
         itemObject.price = await getPriceByProduct(itemObject)
         cart.push(itemObject)
     }
-    
 }
 
 // Fonction qui permet de créer chaque élément qui va etre dans l'item
+//Ajouter le contenu des items du panier
 function displayItem(item) {
     const article = addArticle(item)
     const imgDiv = addImageAndDiv(item)
@@ -44,14 +44,10 @@ function displayItem(item) {
 //Fonction qui va calculer et afficher la quantité total d'objet dans le panier
 //La quantité va se mettre à jour automatiquement qu'on ajoute ou supprime des items
 function displayTotalQuantity() {
-    let total = 0;
     const totalQuantity = document.querySelector("#totalQuantity")
-    cart.forEach((item) => {
-        const totalUnitQuantity = total + item.quantity
-        total += totalUnitQuantity
-    })
+    const total = cart.reduce((total, item) => total + item.quantity, 0)
     totalQuantity.textContent = total
-}
+  }
 
 //Récupérer le prix des produits grâce à l'API
 async function getPriceByProduct(itemObject) {
@@ -61,19 +57,17 @@ async function getPriceByProduct(itemObject) {
 }
 
 //Fonction qui va calculer et afficher le prix total des objets dans le panier
+//une boucle for..of a été crée
 //La fonction va multiplier le nombre d'article avec leur prix de base
 //Le prix va se mettre à jour automatiquement qu'on ajoute ou supprime des items
-
-
 async function displayTotalPrice() {
     var total = 0;
     const totalPrice = document.querySelector("#totalPrice")
-    cart.forEach(async (item) => {
+    for ( const item of cart) { 
         const totalUnitPrice = await getPriceByProduct(item) * item.quantity
         total += totalUnitPrice
-    })
+    }
     totalPrice.textContent = total
-    console.log(total)
 }
 
 
