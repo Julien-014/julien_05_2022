@@ -272,7 +272,7 @@ function validateForm() {
     const inputs = form.querySelectorAll("input")
     inputs.forEach((input) => {
         if (input.value === "") {
-            alert("Please fill all the fields")
+            alert("Veuillez remplir tous les champs")
             return true
         }
         return false
@@ -284,7 +284,7 @@ function validateAddress() {
     const address = document.querySelector("#address").value
     const regex = /^(?:[0-8]\d|9[0-8])\d{3}$/
     if (regex.test(address) === true) {
-        alert("Please enter a valid address")
+        alert("Veuillez entrer une adresse valide")
         return true
     }
     return false
@@ -295,7 +295,7 @@ function validateEmail() {
     const email = document.querySelector("#email").value
     const regex = /^[A-Za-z0-9+_.-]+@(.+)$/
     if (regex.test(email) === false) {
-        alert("Please enter a valid email")
+        alert("Veuillez entrer une adresse email valide")
         return true
     }
     return false
@@ -306,15 +306,15 @@ function detectWord() {
     const form = document.querySelector(".cart__order__form").value
     const regex = /\d/g;
     if (regex.test(firstName.value) === true) {
-        alert("Please enter a valid first name")
+        alert("Veuillez entrer un prénom valide")
         return true
     }
     if (regex.test(lastName.value) === true) {
-        alert("Please enter a valid last name")
+        alert("Veuillez entrer un nom valide")
         return true
     }
     if (regex.test(city.value) === true) {
-        alert("Please enter valid city")
+        alert("Veuillez entrer une ville valide")
         return true
     }
     return false
