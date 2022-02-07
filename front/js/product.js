@@ -98,16 +98,16 @@ if (button != null) {
     button.addEventListener("click", (e) => {
         const color = document.querySelector("#colors").value
         if (color === "") {
-            alert("Please select a color");
+            alert("Veuillez choisir une couleur");
             return;
         }
         const quantity = document.querySelector("#quantity").value
         if (quantity == 0) {
-            alert("Please select at least 1 item");
+            alert("Veuillez sélectionner au moins 1 article");
             return;
         }
         if (quantity > 100) {
-            alert("You cannot select more than 100 items");
+            alert("Vous ne pouvez pas sélectionner plus de 100 articles");
             return;
         }
         saveCart(color, quantity)
